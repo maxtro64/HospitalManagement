@@ -1,0 +1,14 @@
+
+@import "tailwindcss";
+
+@layer utilities {
+    .grid-auto-cols {
+      grid-template-columns: var(--grid-auto-cols, repeat(auto-fill, minmax(250px, 1fr)));
+
+    }
+
+    .bg-primary{
+        background-color: #5f6fff;
+    }
+  }
+
