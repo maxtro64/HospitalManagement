@@ -1,0 +1,29 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+
+@import "tailwindcss";
+*{
+    font-family: Outfit;
+}
+
+::-webkit-scrollbar{
+    @apply hidden
+}
+
+.active hr{
+    @apply block
+}
+
+::-webkit-scrollbar{
+    @apply hidden
+}
+
+@media (max-width:740px ){
+
+/* .active p{
+    @apply text-white  bg-[#5f6fff]
+
+} */
+
+}
