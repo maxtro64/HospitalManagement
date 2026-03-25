@@ -35,7 +35,9 @@ const AdminContextProvider = ({ children }) => {
     const getAllDoctors = useCallback(async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`${backendUrl}/api/admin/all-doctors`);
+            const { data } = await axios.get(`${backendUrl}/api/admin/all-doctors`, {
+                headers: { Authorization: `Bearer ${aToken}` }
+            });
             if (data.success) {
                 setDoctors(data.doctors);
             } else {
@@ -46,13 +48,15 @@ const AdminContextProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, [backendUrl]);
+    }, [backendUrl, aToken]);
 
     const changeAvailability = async (docId) => {
         try {
             setLoading(true);
             const { data } = await axios.patch(
-                `${backendUrl}/api/admin/doctors/${docId}/availability`
+                `${backendUrl}/api/admin/doctors/${docId}/availability`,
+                null,
+                { headers: { Authorization: `Bearer ${aToken}` } }
             );
             if (data.success) {
                 toast.success(data.message);
@@ -68,7 +72,9 @@ const AdminContextProvider = ({ children }) => {
     const getAllAppointments = useCallback(async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`${backendUrl}/api/admin/appointments`);
+            const { data } = await axios.get(`${backendUrl}/api/admin/appointments`, {
+                headers: { Authorization: `Bearer ${aToken}` }
+            });
             if (data.success) {
                 setAppointments(data.appointments);
             }
@@ -77,13 +83,15 @@ const AdminContextProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, [backendUrl]);
+    }, [backendUrl, aToken]);
 
     const cancelAppointment = async (appointmentId) => {
         try {
             setLoading(true);
             const { data } = await axios.patch(
-                `${backendUrl}/api/admin/appointments/${appointmentId}/cancel`
+                `${backendUrl}/api/admin/appointments/${appointmentId}/cancel`,
+                null,
+                { headers: { Authorization: `Bearer ${aToken}` } }
             );
             if (data.success) {
                 toast.success(data.message);
@@ -99,7 +107,9 @@ const AdminContextProvider = ({ children }) => {
     const getDashData = useCallback(async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`${backendUrl}/api/admin/dashboard`);
+            const { data } = await axios.get(`${backendUrl}/api/admin/dashboard`, {
+                headers: { Authorization: `Bearer ${aToken}` }
+            });
             if (data.success) {
                 setDashData(data.data); // Changed from data.message to data.data
             }
@@ -108,7 +118,7 @@ const AdminContextProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, [backendUrl]);
+    }, [backendUrl, aToken]);
 
     // Initialize data if token exists
     useEffect(() => {

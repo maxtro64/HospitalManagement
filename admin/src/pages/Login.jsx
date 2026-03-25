@@ -34,22 +34,29 @@ const {data}=await axios.post(backendUrl+`/api/admin/login`, {
  
 
 if(data.success){
-    localStorage.setItem('dToken',data.token)
-    
-   setDToken(data.token)
-   
+    localStorage.setItem('aToken',data.token)
+    setAtoken(data.token)
+    toast.success('Login successful')
 }
 else{
-    toast.error()
-
+    toast.error(data.message || 'Login failed')
 }
 }
 else{
     const {data}=await axios.post(backendUrl+"/api/doctor/login",{email,password})
+    if(data.success){
+        localStorage.setItem('dToken',data.token)
+        setDToken(data.token)
+        toast.success('Login successful')
+    }
+    else{
+        toast.error(data.message || 'Login failed')
+    }
 }
 
     } catch (error) {
-        
+        toast.error(error.response?.data?.message || error.message || 'An error occurred')
+        console.error(error)
     }
 
 

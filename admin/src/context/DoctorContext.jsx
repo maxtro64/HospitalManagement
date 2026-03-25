@@ -17,9 +17,23 @@ const [appointments,setAppointments]=useState([])
 const [dashData,setDashData]=useState(false)
 const [profileData,setProfileData]=useState(false)
 
+// Sync token with localStorage
+useEffect(() => {
+    if (dToken) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${dToken}`;
+        localStorage.setItem('dToken', dToken);
+    } else {
+        localStorage.removeItem('dToken');
+        // Do not clobber admin token if present
+        if (!localStorage.getItem('aToken')) {
+            delete axios.defaults.headers.common['Authorization'];
+        }
+    }
+}, [dToken]);
+
 const getAppointments=async () => {
     try {
-        const {data}=await axios.get(backendUrl+'/api/doctor/appointments',{Headers:{dToken}})
+        const {data}=await axios.get(backendUrl+'/api/doctor/appointments',{headers:{dToken}})
        if(data.success){
         setAppointments(data.appointments)
        }

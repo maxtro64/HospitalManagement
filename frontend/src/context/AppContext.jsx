@@ -1,12 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { createContext } from 'react'
-import { doctors } from '../assets/assets'
+import axios from 'axios'
+import { doctors as staticDoctors } from '../assets/assets'
 
 export const AppContext=createContext()
 
 const AppContextProvider=(props)=>{
 
 const currencySymbol="$"
+const [doctors, setDoctors] = useState([])
+
+const getDoctorsData = async () => {
+    try {
+        const { data } = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/doctor/list')
+        if (data.success) {
+            // Merge with static doctors to get correct images
+            const mergedDoctors = data.doctors.map(apiDoc => {
+                const staticDoc = staticDoctors.find(s => s._id === apiDoc._id)
+                return staticDoc ? { ...apiDoc, img: staticDoc.img } : apiDoc
+            })
+            setDoctors(mergedDoctors)
+        }
+    } catch (error) {
+        console.error('Error fetching doctors:', error)
+        // Fallback to static doctors
+        setDoctors(staticDoctors)
+    }
+}
+
+useEffect(() => {
+    getDoctorsData()
+}, [])
 
     const value={
 doctors,currencySymbol

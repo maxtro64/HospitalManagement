@@ -2,7 +2,7 @@ import React from 'react'
 import {assets} from "../assets/assets.js"
 import { NavLink, useNavigate } from 'react-router-dom'
 import "./utility.css"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 
@@ -13,7 +13,40 @@ const Navbar = () => {
 
     const navigate=useNavigate();
     const [showMenu, setshowMenu] = useState(false)
-    const [token, settoken] = useState(true)
+    const [token, settoken] = useState(localStorage.getItem('token') ? true : false)
+    
+    // Listen for login/logout changes
+    useEffect(() => {
+        const checkToken = () => {
+            const storedToken = localStorage.getItem('token');
+            settoken(storedToken ? true : false);
+        };
+        
+        // Check on mount
+        checkToken();
+        
+        // Listen for storage changes (when user logs in/out from other tabs)
+        window.addEventListener('storage', checkToken);
+        
+        // Listen for custom token update event (when user logs in/out from this tab)
+        window.addEventListener('tokenUpdated', checkToken);
+        
+        return () => {
+            window.removeEventListener('storage', checkToken);
+            window.removeEventListener('tokenUpdated', checkToken);
+        };
+    }, []);
+    
+    const handleLogout = () => {
+        // Clear all auth tokens from localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('aToken');
+        localStorage.removeItem('dToken');
+        settoken(false);
+        // Dispatch event to notify any listeners
+        window.dispatchEvent(new Event('tokenUpdated'));
+        navigate('/login');
+    }
   return (
     <div className='flex items-center border-b justify-between text-sm py-4 mb-5 border-b-gray-400'>
       <img onClick={()=>navigate("/")} src={assets.logo} alt="" />
@@ -58,7 +91,7 @@ const Navbar = () => {
             <div className='min-w-48 bg-stone-100 rounded flex flex-col gap-4 p-4 '>
                     <p onClick={()=>navigate('/my-profile')} className='hover:text-black cursor-pointer'>My Profile</p>
                     <p onClick={()=>navigate('/my-appointments')} className='hover:text-black cursor-pointer'>My Appointments</p>
-                    <p onClick={()=>settoken(false)} className='hover:text-black cursor-pointer'>Logout </p>
+                    <p onClick={handleLogout} className='hover:text-black cursor-pointer'>Logout </p>
                 </div>
             </div>
         </div>
