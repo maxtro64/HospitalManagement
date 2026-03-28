@@ -188,7 +188,7 @@ const bookAppointment = async (req, res) => {
         res.status(201).json({ success: true, message: "Appointment Booked" })
 
     } catch (error) {
-        console.error('Error booking appointment:', error)
+        console.error('Error booking appointment:', error.message)
         res.status(500).json({ success: false, message: error.message || 'Internal server error' })
     }
 }

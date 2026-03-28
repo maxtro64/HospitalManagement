@@ -13,7 +13,31 @@ const port = process.env.PORT || 4000
 
 // middlewares
 app.use(express.json())
-app.use(cors())
+
+// CORS configuration
+const allowedOrigins = [
+  'https://hospital-management-frontend.onrender.com',
+  'https://hospital-management-admin.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:3000'
+]
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS policy'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token']
+}
+
+app.use(cors(corsOptions))
 
 // db connection
 connectDb()

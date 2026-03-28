@@ -5,7 +5,6 @@ const authUser = async (req, res, next) => {
         // Better way to get token (supports "Bearer <token>" format)
         const token = req.headers.authorization?.split(' ')[1] || req.headers.token;
         
-        
         if (!token) {
             return res.status(401).json({ 
                 success: false, 
@@ -15,7 +14,6 @@ const authUser = async (req, res, next) => {
 
         
         const token_decode = jwt.verify(token, process.env.JWT_SECRET);
-        // console.log("decode",token_decode)
         // SAFER: Attach user info to req.user instead of req.body
         req.user = { 
             userId: token_decode.id 
@@ -23,7 +21,6 @@ const authUser = async (req, res, next) => {
         
         next();
     } catch (error) {
-        console.log('Authentication error:', error);
         
         // More specific error messages
         let message = 'Authentication failed';

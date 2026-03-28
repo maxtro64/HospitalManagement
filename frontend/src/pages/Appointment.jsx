@@ -19,6 +19,12 @@ const daysOfWeek=['SUN','MON','TUE','WED','THU','FRI','SAT']
 const navigate = useNavigate()
 
 const bookAppointment = async () => {
+    // Validate slot selection
+    if (!slotTime) {
+        toast.warn('Please select a time slot')
+        return
+    }
+
     const token = localStorage.getItem('token')
     if (!token) {
         toast.warn('Login to book appointment')
@@ -41,15 +47,15 @@ const bookAppointment = async () => {
             toast.error(data.message)
         }
     } catch (error) {
-        toast.error(error.response?.data?.message || error.message)
+        toast.error(error.response?.data?.message || error.message || 'Booking failed')
     }
 }
 
 const getAvailableSlots =async()=>{
-  if (!docInfo || !docInfo.slots_booked) return;
+  if (!docInfo) return;
   setDocsSlots([])
   let today=new Date()
-  let slots_booked = docInfo.slots_booked
+  let slots_booked = docInfo.slots_booked || {} // Initialize as empty object if not present
   for(let i=0;i<7;i++){
 let currentDate=new Date(today)
 currentDate.setDate(today.getDate()+i)
@@ -169,7 +175,7 @@ useEffect(() => {
 
   ))}
 </div>
-<button onClick={bookAppointment} className='primary-color text-white text-sm font-light px-14 rounded-full my-6 py-3'>Book an Appointment</button>
+<button onClick={bookAppointment} disabled={!slotTime} className={`text-white text-sm font-light px-14 rounded-full my-6 py-3 ${slotTime ? 'primary-color cursor-pointer' : 'bg-gray-400 cursor-not-allowed'}`}>Book an Appointment</button>
 </div>
 
 

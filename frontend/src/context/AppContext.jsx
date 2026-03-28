@@ -8,12 +8,12 @@ export const AppContext=createContext()
 const AppContextProvider=(props)=>{
 
 const currencySymbol="$"
-const [doctors, setDoctors] = useState([])
+const [doctors, setDoctors] = useState(staticDoctors) // Start with static doctors immediately
 
 const getDoctorsData = async () => {
     try {
         const { data } = await axios.get(import.meta.env.VITE_BACKEND_URL + '/api/doctor/list')
-        if (data.success) {
+        if (data.success && data.doctors.length > 0) {
             // Merge with static doctors to get correct images
             const mergedDoctors = data.doctors.map(apiDoc => {
                 const staticDoc = staticDoctors.find(s => s._id === apiDoc._id)
@@ -22,7 +22,7 @@ const getDoctorsData = async () => {
             setDoctors(mergedDoctors)
         }
     } catch (error) {
-        console.error('Error fetching doctors:', error)
+        console.error('Error fetching doctors from backend, using static doctors:', error)
         // Fallback to static doctors
         setDoctors(staticDoctors)
     }
