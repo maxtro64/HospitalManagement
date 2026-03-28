@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import mongoose from 'mongoose'
 import doctorModel from './models/doctorModel.js'
-import connectDb from './config/mongoDb.js'
+import connectDb from './config/mongodb.js'
 import bcrypt from 'bcrypt'
 
 const doctors = [
